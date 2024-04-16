@@ -1,0 +1,8 @@
+1. stater pack for prisma-express project.
+2. process:
+    1. git clone https://github.com/user/repository.git project_name
+    2. yarn install/yarn.
+    3. npx prisma init
+    4. .env: DATABASE_URL="postgres://USER:PASSWORD@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
+    5. create test schema
+    6. cmd: npx prisma migrate dev --name init
