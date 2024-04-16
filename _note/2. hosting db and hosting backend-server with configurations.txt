@@ -1,0 +1,30 @@
+1. hosting db:
+  1. supabase.com:
+    1. my auth: github
+    2. new project:
+      1. name: book-catalog
+      2. database password: generate a password
+      3. region: south asia (mumbai)
+    2. project settings> database settings:
+      1. use connectionString, databasePassword at .env
+    3. npx prisma migrate dev
+    4. sidebar: for observation
+      1. database
+      2. table editor
+2. hosting backend-server and config:
+  1. vercel.json:
+    1. version
+    2. builds
+    3. routes
+  2. package.json: script
+      1. "postinstall": "prisma generate"
+  3. turn off logger:
+    1. server
+    2. app>middlewares>globalErrorHandler
+  4. build cmd: yarn build or tsc
+  5. vercel --prod:
+    1. Set up and deploy “..”? [Y/n] y
+    2. Which scope do you want to deploy to? Md. Shahariar Rahman
+    3. Link to existing project? [y/N] n
+    4. What’s your project’s name? book-catalog-backend
+    5. In which directory is your code located? ./
