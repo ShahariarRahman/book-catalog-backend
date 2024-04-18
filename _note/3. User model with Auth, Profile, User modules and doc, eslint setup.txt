@@ -1,0 +1,15 @@
+book catalog backend:
+    1. model:
+        1. User
+    2. modules/path:
+        1. Auth: 
+            1. api/v1/auth/signup (POST)
+            2. api/v1/auth/signin (POST)
+        2. Users: 
+            1. api/v1/users (GET) 
+            2. api/v1/users/6177a5b87d32123f08d2f5d4 (Single GET) 
+            3. api/v1/users/6177a5b87d32123f08d2f5d4 (PATCH) 
+            4. api/v1/users/6177a5b87d32123f08d2f5d4 (DELETE)
+        3. Profile: 
+            1. api/v1/profile (GET)
+    

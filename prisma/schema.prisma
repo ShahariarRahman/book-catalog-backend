@@ -14,7 +14,18 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  role       UserRole @default(customer)
+  contactNo  String
+  address    String
+  profileImg String
+}
+
+enum UserRole {
+  super_admin
+  admin
+  customer
 }

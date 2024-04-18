@@ -1,0 +1,163 @@
+book catalog backend:
+  1. description: backend for a book listing application for crud operations, pagination and filtering.
+  2. technologyStack:
+    1. programmingLanguage: typescript
+    2. webFramework: express.js
+    3. objectRelationModel(orm): prisma
+    4. database: postgresql
+  3. model:
+    1. User:
+      1. id: A UUID generated using the @default(uuid()) attribute.
+      2. name: A string representing the user's name.
+      3. email: A unique string representing the user's email.
+      4. password: A string representing the user's password.
+      5. role: A string with values 'admin' or 'customer'.
+      6. contactNo: A string for the user's contact number.
+      7. address: A string for the user's address.
+      8. profileImg: A string for the user's profile image.
+  4. api endpoints and sample data:
+    1. users listing: CRUD operations
+      1. sign up:
+        1. route: /api/v1/auth/signup (POST)
+        2. req body: json
+          name: John Doe,
+          email: john@example.com,
+          password: john123,
+          role: customer,
+          contactNo: 1234567890,
+          address: Dhaka Bangladesh,
+          profileImg: user.jpg
+        3. res: json
+          success: true,
+          statusCode: 200,
+          message: User created successfully!,
+          data: 
+            id: 2d267d12-6b9c-4ee0-a8e5-0d8f6c5c1e3b,
+            name: John Doe,
+            email: john@example.com,
+            role: customer,
+            contactNo: 1234567890,
+            address: Dhaka Bangladesh,
+            profileImg: user.jpg
+      2. sign in/login: 
+        1. route: /api/v1/auth/signin (POST)
+        2. req body: json
+          email: john@example.com,
+          password: john123
+        3. res: json
+          success: true,
+          statusCode: 200,
+          message: User signin successfully!,
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q"
+        4. decoded token:
+          role: customer,
+          userId: o577-x888-dd86-dd2f,
+          iat: 1516239022   // iat at least 1 year
+      3. get all users: [super_admin/admin]
+        1. route: /api/v1/users (GET)
+        2. req body: {}
+        3. res: json
+          success: true,
+          statusCode: 200,
+          message: Users retrieved successfully,
+          data: [
+            {
+              id: 2d267d12-6b9c-4ee0-a8e5-0d8f6c5c1e3b,
+              name: John Doe,
+              email: john@example.com,
+              role: customer,
+              contactNo: 1234567890,
+              address: Dhaka Bangladesh,
+              profileImg: user.jpg
+            },
+            // ...
+          ]
+      4. get a single user: [super_admin/admin]
+        1. route: /api/v1/users/:id (GET)
+        2. req param: :id
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: User fetched successfully,
+          data: 
+            id: 2d267d12-6b9c-4ee0-a8e5-0d8f6c5c1e3b,
+            name: John Doe,
+            email: john@example.com,
+            role: customer,
+            contactNo: 1234567890,
+            address: Dhaka Bangladesh,
+            profileImg: user.jpg
+      5. update a single user: [super_admin/admin]
+        1. route: /api/v1/users/:id (PATCH)
+        2. req param: :id
+        3. req body:
+          name: John Doe1,
+          email: john1@example.com,
+          contactNo: 01234567890,
+          address: Khulna, Bangladesh,
+          profileImg: user1.jpg
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: User updated successfully,
+          data:
+            id: 2d267d12-6b9c-4ee0-a8e5-0d8f6c5c1e3b,
+            name: John Doe1,
+            email: john1@example.com,
+            contactNo: 01234567890,
+            address: Khulna, Bangladesh,
+            profileImg: user1.jpg
+      6. delete a user: [super_admin/admin]
+        1. route: /api/v1/users/:id (DELETE)
+        2. req param: :id
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Users deleted successfully,
+          data:
+            id: 2d267d12-6b9c-4ee0-a8e5-0d8f6c5c1e3b,
+            name: John Doe1,
+            email: john1@example.com,
+            contactNo: 01234567890,
+            address: Khulna, Bangladesh,
+            profileImg: user1.jpg
+    2. profile listing: R operation
+      1. get user profile: [specific super_admin/specific admin/specific customer]
+        1. route: /api/v1/profile (Get)
+        2. req headers: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q
+        3. decoded token:
+          role: customer,
+          userId: o577-x888-dd86-dd2f,
+          iat: 1516239022   // iat at least 1 year
+        4. req body: {}
+        5. res: json
+          success: true,
+          statusCode: 200,
+          message: Profile retrieved successfully,
+          data:
+            name: John Doe,
+            email: john@example.com,
+            password: john123,
+            role: customer,
+            contactNo: 1234567890,
+            address: Dhaka Bangladesh,
+            profileImg: user.jpg
+        6. hints: access the specific profile
+          1. compare userId in token with the userId in the User Model to find a match.
+
+
+### Live Link: https://backend-book-catalog.vercel.app
+
+### Application Routes:
+
+#### User
+
+- api/v1/auth/signup (POST)
+- api/v1/auth/signin (POST)
+- api/v1/users (GET)
+- api/v1/users/6177a5b87d32123f08d2f5d4 (Single GET)
+- api/v1/users/6177a5b87d32123f08d2f5d4 (PATCH)
+- api/v1/users/6177a5b87d32123f08d2f5d4 (DELETE)
+- api/v1/profile (GET)
