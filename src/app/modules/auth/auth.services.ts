@@ -8,7 +8,7 @@ import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import { userResponseFields } from "../user/user.constant";
 import { IUserResponseFields } from "../user/user.interface";
-import { isUserExist } from "../user/users.utils";
+import { isUserExist } from "../user/user.utils";
 import { ILoginUserResponse } from "./auth.interface";
 
 const signup = async (data: User): Promise<IUserResponseFields> => {

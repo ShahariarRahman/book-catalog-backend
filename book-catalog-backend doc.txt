@@ -15,6 +15,17 @@ book catalog backend:
       6. contactNo: A string for the user's contact number.
       7. address: A string for the user's address.
       8. profileImg: A string for the user's profile image.
+    2. Category:
+      1. id: A UUID generated using the @default(uuid()) attribute.
+      2. title: A string representing the category title.
+    3. Book: 
+      1. id: A UUID generated using the @default(uuid()) attribute.
+      2. title: A string representing the book's title.
+      3. author: A string representing the book's author.
+      4. price: A floating-point number representing the book's price.
+      5. genre: A string representing the book's genre.
+      6. publicationDate: A string field representing the book's publication date.
+      7. categoryId: A UUID representing the category to which the book belongs.     
   4. api endpoints and sample data:
     1. users listing: CRUD operations
       1. sign up:
@@ -146,8 +157,195 @@ book catalog backend:
             profileImg: user.jpg
         6. hints: access the specific profile
           1. compare userId in token with the userId in the User Model to find a match.
-
-
+    3. category listing: CRUD operations
+      1. create category:
+        1. route: /api/v1/categories/create-category (POST)
+        2. req body: json
+          title: Programming
+        3. res: json
+          success: true,
+          statusCode: 200,
+          message: Category created successfully,
+          data:
+            id: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+            title: Programming
+      2. get all categories:
+        1. route: /api/v1/categories (GET)
+        2. req body: {}
+        3. res: json
+          success: true,
+          statusCode: 200,
+          message: Categories fetched successfully,
+          data: [
+            {
+              id: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+              title: Programming
+            },
+            // ...
+          ]
+      3. get a single category:
+        1. route: /api/v1/categories/:id (GET)
+        2. req param: :id
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Category fetched successfully,
+          data: 
+            id: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+            title: Fiction,
+            books: [
+              {
+                id: efb2949f-8f85-42f6-a9ce-8c177814e2ec,
+                title: The Catcher in the Rye,
+                author: J.D. Salinger,
+                genre: Fiction,
+                price: 350.75,
+                publicationDate: 1951-07-16
+              },
+              {
+                id: c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9,
+                title: To Kill a Mockingbird,
+                author: Harper Lee,
+                genre: Fiction,
+                price: 299.99,
+                publicationDate: 1960-07-11
+              }
+              // more...
+            ]
+      4. update a category: [super_admin/admin]
+        1. route: /api/v1/categories/:id (PATCH)
+        2. req param: :id
+        3. req body:
+          title: Fiction
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Category updated successfully,
+          data:
+            id: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+            title: Fiction
+      5. delete a category: [super_admin/admin]
+        1. route: /api/v1/categories/:id ( DELETE)
+        2. req param: :id
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Category deleted successfully,
+          data: 
+            id: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+            title: Fiction
+    4. book listing: CRUD operations
+      1. create a new book: [super_admin/admin]
+        1. route: /api/v1/books/create-book (POST)
+        2. req body: json
+            title: The Catcher in the Rye,
+            author: J.D. Salinger,
+            genre: Fiction,
+            price: 350.75,
+            publicationDate: 1951-07-16,
+            categoryId: a3c7b742-6a34-4c6f-b6b0-58f41d48d5c6
+        3. res: json
+          success: true,
+          statusCode: 200,
+          message: Book created successfully,
+          data:
+            id: efb2949f-8f85-42f6-a9ce-8c177814e2ec,
+            title: The Catcher in the Rye,
+            author: J.D. Salinger,
+            genre: Fiction,
+            price: 350.75,
+            publicationDate: 1951-07-16,
+            categoryId: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+            category:
+              id: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d,
+              title: Fiction
+      2. get all books:
+        1. route: /api/v1/books (GET)
+        2. req body: {}
+        3. res: json
+            success: true,
+            statusCode: 200,
+            message: Books fetched successfully,
+            meta: {
+              page: 3,
+              limit: 10,
+              total: 95,
+              totalPage: 10
+            },
+            data: [ {},{}, // more... ]
+        4. searching, filtering: query parameters: (case Insensitive)
+          1. page: The page number for pagination (e.g., ?page=1).
+          2. limit: The number of book listings per page (e.g. ?limit=10).
+          3. sortBy: The field to sort the cow listings (e.g. ?sortBy=price).
+          4. sortOrder : The order of sorting, either 'asc' or 'desc' (e.g. ?sortOrder=asc).
+          5. minPrice: The minimum price for filtering (e.g. ?minPrice=1000).
+          6. maxPrice: The maximum price for filtering (e.g. ?maxPrice=5000).
+          7. category: Filter using category id (e.g : ?category=f1234573-sfkjsf-45332)
+          8. searchTerm: The searchTerm query string for searching books (e.g., ?searchTerm="Programming"):
+            1. (searchTerm Fields should be title,author,genre)
+      3. get books by categoryId:
+        1. route: /api/v1/books/:categoryId/category (GET)
+        2. req param: :categoryId
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Books with associated category data fetched successfully,
+          data: [{},{},// more ...]
+      4. get a single book:
+        1. route: /api/v1/books/:id (GET)
+        2. req param: :id
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Book fetched successfully,
+          data:
+            id: efb2949f-8f85-42f6-a9ce-8c177814e2ec,
+            title: The Catcher in the Rye,
+            author: J.D. Salinger,
+            genre: Fiction,
+            price: 350.75,
+            publicationDate: 1951-07-16,
+            categoryId: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d
+      5. update a single book: [super_admin/admin]
+        1. route: /api/v1/books/:id (PATCH)
+        2. req param: :id
+        3. req body:
+          title: The Catcher in the Rye Part-1,
+          author: J.D. John,
+          genre: Programming,
+          price: 340.75,
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Book updated successfully,
+          data:
+            id: efb2949f-8f85-42f6-a9ce-8c177814e2ec,
+            title: The Catcher in the Rye Part-1,
+            author: J.D. John,
+            genre: Programming,
+            price: 340.75,
+            publicationDate: 1951-07-16,
+            categoryId: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d
+      6. delete a book: [super_admin/admin]
+        1. route: /api/v1/books/:id ( DELETE)
+        2. req param: :id
+        3. req body: {}
+        4. res: json
+          success: true,
+          statusCode: 200,
+          message: Book is deleted successfully,
+          data:
+            id: efb2949f-8f85-42f6-a9ce-8c177814e2ec,
+            title: The Catcher in the Rye Part-1,
+            author: J.D. John,
+            genre: Programming,
+            price: 340.75,
+            publicationDate: 1951-07-16,
+            categoryId: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d
 ### Live Link: https://backend-book-catalog.vercel.app
 
 ### Application Routes:
@@ -161,3 +359,20 @@ book catalog backend:
 - api/v1/users/6177a5b87d32123f08d2f5d4 (PATCH)
 - api/v1/users/6177a5b87d32123f08d2f5d4 (DELETE)
 - api/v1/profile (GET)
+
+### Category
+
+- api/v1/categories/create-category (POST)
+- api/v1/categories (GET)
+- api/v1/categories/6177a5b87d32123f08d2f5d4 (Single GET)
+- api/v1/categories/6177a5b87d32123f08d2f5d4 (PATCH)
+- api/v1/categories/6177a5b87d32123f08d2f5d4 (DELETE)
+
+### Books
+
+- api/v1/books/create-book (POST)
+- api/v1/books (GET)
+- api/v1/books/:categoryId/category (GET)
+- api/v1/books/:id (GET)
+- api/v1/books/:id (PATCH)
+- api/v1/books/:id (DELETE)

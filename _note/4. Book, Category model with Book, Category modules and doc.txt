@@ -1,0 +1,18 @@
+book catalog backend:
+    1. model:
+        1. Book
+        2. Category
+    2. modules/path:
+        1. Book:
+            1. api/v1/categories/create-category (POST)
+            2. api/v1/categories (GET)
+            3. api/v1/categories/6177a5b87d32123f08d2f5d4 (Single GET)
+            4. api/v1/categories/6177a5b87d32123f08d2f5d4 (PATCH)
+            5. api/v1/categories/6177a5b87d32123f08d2f5d4 (DELETE)
+        2. Category:
+            1. api/v1/books/create-book (POST)
+            2. api/v1/books (GET)
+            3. api/v1/books/:categoryId/category (GET)
+            4. api/v1/books/:id (GET)
+            5. api/v1/books/:id (PATCH)
+            6. api/v1/books/:id (DELETE)

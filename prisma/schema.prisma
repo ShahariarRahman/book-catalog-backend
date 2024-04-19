@@ -22,6 +22,29 @@ model User {
   contactNo  String
   address    String
   profileImg String
+
+  @@map("users")
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String @unique
+  books Book[]
+
+  @@map("categories")
+}
+
+model Book {
+  id              String   @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate DateTime
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+
+  @@map("books")
 }
 
 enum UserRole {
