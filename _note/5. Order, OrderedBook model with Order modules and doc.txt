@@ -1,0 +1,9 @@
+book catalog backend:
+    1. model:
+        1. Order
+        2. OrderedBook
+    2. modules/path:
+        1. Order:
+            1. api/v1/orders/create-order (POST)
+            2. api/v1/orders (GET)
+            3. api/v1/orders/:orderId (GET)

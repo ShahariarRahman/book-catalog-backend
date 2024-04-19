@@ -26,6 +26,24 @@ book catalog backend:
       5. genre: A string representing the book's genre.
       6. publicationDate: A string field representing the book's publication date.
       7. categoryId: A UUID representing the category to which the book belongs.     
+    5. Order:
+      1. id: A UUID generated using the @default(uuid()) attribute.
+      2. userId: A UUID representing the user who placed the order.
+      3. orderedBooks: A JSON field containing an array of objects, each with book ID and quantity.
+      4. status: A string with values 'pending', 'shipped', or 'delivered', defaulting to 'pending'.
+      5. createdAt: A DateTime field representing the order creation timestamp.
+    6. OrderedBook model or Json approaches in Order:
+      1. ap-1: model:
+        1. OrderedBook model:
+          1. id: A UUID generated using the @default(uuid()) attribute.
+          2. orderId: A UUID representing the order.
+          3. bookId: A UUID representing the ordered book.
+          4. quantity: An integer representing the quantity of the book.
+        2. relation: OrderedBook one-to-many Order.
+      2. ap-2: Json:
+        1. Order model: orderedBooks as a prisma's Json typed field.
+          1. is an array of objects: each object contains bookId, quantity.
+          2. ex: [ { "bookId": "uuid1", "quantity": 2 }] 
   4. api endpoints and sample data:
     1. users listing: CRUD operations
       1. sign up:
@@ -346,6 +364,99 @@ book catalog backend:
             price: 340.75,
             publicationDate: 1951-07-16,
             categoryId: b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d
+    5. order listing: CR operations
+      1. create order: [customer]
+        1. route: /api/v1/orders/create-order (POST)
+        2. req headers: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q
+        3. decoded token:
+          role: customer,
+          userId: o577-x888-dd86-dd2f,
+          iat: 1516239022   // iat at least 1 year
+        4. req body: json
+            orderedBooks: [
+            {
+              "bookId": "efb2949f-8f85-42f6-a9ce-8c177814e2ec",
+              "quantity": 3
+            },
+            {
+              "bookId": "c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9",
+              "quantity": 2
+            }
+          ]
+        5. res: json
+          success: true,
+          statusCode: 200,
+          message: Order created successfully",
+          data: {
+            "id": "fe659812-5b10-4b6d-b88d-7b9e60902a67",
+            "userId": "b2e06b3e-87bf-4b11-a74a-29c66f8f48df",
+            "orderedBooks": [
+              {
+                "bookId": "efb2949f-8f85-42f6-a9ce-8c177814e2ec",
+                "quantity": 3
+              },
+              {
+                "bookId": "c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9",
+                "quantity": 2
+              }
+            ],
+            "status": "pending",
+            "createdAt": "2023-08-28T10:00:00Z"
+          }
+        6. hints: decode the userId from token for creating order for specific customer.
+      2. get all orders: [super_admin/admin]
+        1. route: /api/v1/orders (GET)
+        2. req body: {}
+        3. res: json
+            success: true,
+            statusCode: 200,
+            message: Orders retrieved successfully,
+            data: [ {}, // more ... ]
+      3. get all orders for specific customer: [specific customer]
+        1. route: /api/v1/orders (GET)
+        2. req headers: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q
+        3. decoded token:
+          role: customer,
+          userId: o577-x888-dd86-dd2f,
+          iat: 1516239022   // iat at least 1 year
+        4. req body: {}
+        5. res: json
+            success: true,
+            statusCode: 200,
+            message: Orders retrieved successfully,
+            data: [ {}, // more ... ]
+      4. get a single order by Id: [super_admin/admin/specific customer]
+        1. route: /api/v1/orders/:orderId (Get) 
+        2. req param: :orderId
+        3. req headers: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q
+        4. decoded token:
+          role: customer,
+          userId: o577-x888-dd86-dd2f,
+          iat: 1516239022   // iat at least 1 year
+        5. req body: {}
+        6. res: json
+          success: true,
+          statusCode: 200,
+          message: Order fetched successfully,
+          data:
+            id: fe659812-5b10-4b6d-b88d-7b9e60902a67,
+            userId: b2e06b3e-87bf-4b11-a74a-29c66f8f48df,
+            orderedBooks: [
+              {
+                "bookId": "efb2949f-8f85-42f6-a9ce-8c177814e2ec",
+                "quantity": 3
+              },
+              {
+                "bookId": "c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9",
+                "quantity": 2
+              }
+            ],
+            status: pending,
+            createdAt: 2023-08-28T10:00:00Z
+        7. hints: access the specific order
+          1. admin: no further checks are required.
+          2. customer: verify order's userId matches the userId of the customer who placed the order. 
+
 ### Live Link: https://backend-book-catalog.vercel.app
 
 ### Application Routes:
@@ -376,3 +487,9 @@ book catalog backend:
 - api/v1/books/:id (GET)
 - api/v1/books/:id (PATCH)
 - api/v1/books/:id (DELETE)
+
+### Orders
+
+- api/v1/orders/create-order (POST)
+- api/v1/orders (GET) 
+- api/v1/orders/:orderId (GET)

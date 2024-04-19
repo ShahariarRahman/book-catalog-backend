@@ -44,6 +44,12 @@ Backend for a book listing application for CRUD operations, pagination and filte
 - api/v1/books/:id (PATCH)
 - api/v1/books/:id (DELETE)
 
+### Orders
+
+- api/v1/orders/create-order (POST)
+- api/v1/orders (GET)
+- api/v1/orders/:orderId (GET)
+
 ## Application Model:
 
 ### User Model:
@@ -77,6 +83,53 @@ Create a `Book` model with the following fields:
 - genre: A string representing the book's genre.
 - publicationDate: A string field representing the book's publication date.
 - categoryId: A UUID representing the category to which the book belongs.
+
+### Order Model
+
+Create an `Order` model with the following fields:
+
+- id: A UUID generated using the @default(uuid()) attribute.
+- userId: A UUID representing the user who placed the order.
+- orderedBooks: A JSON field containing an array of objects, each with book ID and quantity.
+- status: A string with values 'pending', 'shipped', or 'delivered', defaulting to 'pending'.
+- createdAt: A DateTime field representing the order creation timestamp.
+
+#### Storing Ordered Books: Two approaches
+
+When it comes to storing ordered books in application, we have a range of choices. Here, we have two prevalent strategies: utilizing a JSON field to hold the data, or alternatively, crafting a distinct model for ordered books.
+
+##### Approach 1: Using JSON Type
+
+1. Define the JSON Field:
+
+- In the `Order` model, define the `orderedBooks` field as a JSON data type.
+- Use Prisma's Json type to represent JSON data.
+
+2. Storing Array of Objects:
+
+- In the `orderedBooks` field, store an array of objects, each containing `bookId` and `quantity`.
+- JSON arrays are enclosed in square brackets [], and objects are enclosed in curly braces {}.
+
+3. Example JSON Structure:
+
+```json
+[
+  { "bookId": "uuid1", "quantity": 2 },
+  { "bookId": "uuid2", "quantity": 1 }
+]
+```
+
+#### Approach 2: Using Separate Model
+
+1. Define OrderedBook Model:
+
+- Create an `OrderedBook` model with fields: `id`, `orderId`, `bookId`, and `quantity`.
+- Use the @default(uuid()) attribute to generate UUIDs for id.
+
+2. Create Relationship:
+
+- In the `Order` model, establish a one-to-many relationship to `OrderedBook`.
+- This enables each order to have multiple associated ordered book entries.
 
 ## API Endpoints and Sample Data:
 
@@ -622,6 +675,171 @@ Response Sample Data:
     "price": 340.75,
     "publicationDate": "1951-07-16",
     "categoryId": "b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d"
+  }
+}
+```
+
+## Implement Create, Read Operations for Order Listings.
+
+### Create Order → Only Allowed For Customer
+
+Route: /api/v1/orders/create-order (POST)
+
+Request Headers: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q"
+
+Decoded Token:
+
+```json
+{
+  "role": "customer",
+  "userId": "o577-x888-dd86-dd2f",
+  "iat": 1516239022   → "iat at least 1 year"
+}
+```
+
+Request Body:
+
+```json
+{
+  "orderedBooks": [
+    {
+      "bookId": "efb2949f-8f85-42f6-a9ce-8c177814e2ec",
+      "quantity": 3
+    },
+    {
+      "bookId": "c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9",
+      "quantity": 2
+    }
+  ]
+}
+```
+
+Response: The newly created order object.
+
+Response Sample Pattern:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Order created successfully",
+  "data": {
+    "id": "fe659812-5b10-4b6d-b88d-7b9e60902a67",
+    "userId": "b2e06b3e-87bf-4b11-a74a-29c66f8f48df",
+    "orderedBooks": [
+      {
+        "bookId": "efb2949f-8f85-42f6-a9ce-8c177814e2ec",
+        "quantity": 3
+      },
+      {
+        "bookId": "c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9",
+        "quantity": 2
+      }
+    ],
+    "status": "pending",
+    "createdAt": "2023-08-28T10:00:00Z"
+  }
+}
+```
+
+Hints: You will have to decode the userId from token for creating order for specific customer.
+
+### Get all Order → Only Allowed For Admins
+
+Route: /api/v1/orders (GET)
+
+Response: The ordered array of objects.
+
+Response Sample Pattern:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Orders retrieved successfully",
+  "data": [
+    {}
+    // More orders...
+  ]
+}
+```
+
+### Get all Order for specific Customers → Only Specific Customers
+
+Route: /api/v1/orders (GET)
+
+Request Headers: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q"
+
+Decoded Token:
+
+```json
+{
+  "role": "customer",
+  "userId": "o577-x888-dd86-dd2f",
+  "iat": 1516239022   → "iat at least 1 year"
+}
+```
+
+Response: The ordered array of objects.
+
+Response Sample Pattern:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Orders retrieved successfully",
+  "data": [
+    {}
+    // More orders...
+  ]
+}
+```
+
+### Get single order by Id → Only for specific customer and admins
+
+Route: /api/v1/orders/:orderId (Get)
+
+Request Headers: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiY3VzdG9tZXIiLCJ1c2VySWQiOiJvNTc3LXg4ODgtZGQ4Ni1kZDJmIiwiaWF0IjoxNTE2MjM5MDIyfQ.MejYWi-cw0zf5zFiJ5R09-PrCWOj8auEqAz2XY9im1Q"
+
+Decoded Token:
+
+```json
+{
+  "role": "customer",
+  "userId": "o577-x888-dd86-dd2f",
+  "iat": 1516239022   → "iat at least 1 year"
+}
+```
+
+Please follow these steps to access the specific order:
+
+- If the user's role is an admin, no further checks are required.
+
+- If the user's role is a customer, verify that the order's userId matches the userId of the customer who placed the order. This step ensures that only customers who ordered individually will be able to see the specific order.
+
+Sample Response Data:
+
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Order fetched successfully",
+  "data": {
+    "id": "fe659812-5b10-4b6d-b88d-7b9e60902a67",
+    "userId": "b2e06b3e-87bf-4b11-a74a-29c66f8f48df",
+    "orderedBooks": [
+      {
+        "bookId": "efb2949f-8f85-42f6-a9ce-8c177814e2ec",
+        "quantity": 3
+      },
+      {
+        "bookId": "c9b2d566-1d8a-4fe1-8d15-07ed4f7c5dc9",
+        "quantity": 2
+      }
+    ],
+    "status": "pending",
+    "createdAt": "2023-08-28T10:00:00Z"
   }
 }
 ```

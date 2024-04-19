@@ -22,6 +22,7 @@ model User {
   contactNo  String
   address    String
   profileImg String
+  orders     Order[]
 
   @@map("users")
 }
@@ -35,16 +36,47 @@ model Category {
 }
 
 model Book {
-  id              String   @id @default(uuid())
+  id              String        @id @default(uuid())
   title           String
   author          String
   price           Float
   genre           String
   publicationDate DateTime
   categoryId      String
-  category        Category @relation(fields: [categoryId], references: [id])
+  category        Category      @relation(fields: [categoryId], references: [id])
+  orderedBooks    OrderedBook[]
 
   @@map("books")
+}
+
+model Order {
+  id           String        @id @default(uuid())
+  status       Status        @default(pending)
+  createdAt    DateTime      @default(now())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  orderedBooks OrderedBook[]
+
+  @@map("orders")
+}
+
+model OrderedBook {
+  id       String @id @default(uuid())
+  quantity Int    @default(1)
+
+  orderId String
+  Order   Order  @relation(fields: [orderId], references: [id])
+
+  bookId String
+  Book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("ordered_books")
+}
+
+enum Status {
+  pending
+  shipped
+  delivered
 }
 
 enum UserRole {

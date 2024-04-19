@@ -26,7 +26,9 @@ const getByIdFromDB = async (id: string): Promise<Category> => {
     where: {
       id,
     },
-    // includes the book
+    include: {
+      books: true,
+    },
   });
 
   if (!result) {
