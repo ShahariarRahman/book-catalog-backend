@@ -50,6 +50,14 @@ Backend for a book listing application for CRUD operations, pagination and filte
 - api/v1/orders (GET)
 - api/v1/orders/:orderId (GET)
 
+### ReviewAndRating
+
+- api/v1/reviews (POST)
+- api/v1/reviews (GET)
+- api/v1/reviews/:id (GET)
+- api/v1/reviews/:id (PATCH)
+- api/v1/reviews/:id (DELETE)
+
 ## Application Model:
 
 ### User Model:
@@ -130,6 +138,16 @@ When it comes to storing ordered books in application, we have a range of choice
 
 - In the `Order` model, establish a one-to-many relationship to `OrderedBook`.
 - This enables each order to have multiple associated ordered book entries.
+
+### Review And Rating:
+
+Create a `ReviewAndRating` model with the following fields:
+
+- id: A UUID generated using the @default(uuid()) attribute.
+- review: A string representing the user's review.
+- rating: An integer representing the user's rating. (1 - 5)
+- userId: A UUID representing the user who submitted the review.
+- bookId: A UUID representing the book being reviewed.
 
 ## API Endpoints and Sample Data:
 
@@ -843,3 +861,5 @@ Sample Response Data:
   }
 }
 ```
+
+## Implement CRUD Operations for Book Reviews

@@ -1,0 +1,10 @@
+book catalog backend:
+    1. model:
+        1. ReviewAndRating
+    2. modules/path:
+        1. ReviewAndRating:
+            1. api/v1/reviews (POST)
+            2. api/v1/reviews (GET)
+            3. api/v1/reviews/:id (GET)
+            4. api/v1/reviews/:id (PATCH)
+            5. api/v1/reviews/:id (DELETE)

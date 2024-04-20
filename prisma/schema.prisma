@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  password   String
-  role       UserRole @default(customer)
-  contactNo  String
-  address    String
-  profileImg String
-  orders     Order[]
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  password         String
+  role             UserRole          @default(customer)
+  contactNo        String
+  address          String
+  profileImg       String
+  orders           Order[]
+  reviewAndRatings ReviewAndRating[]
 
   @@map("users")
 }
@@ -36,15 +37,16 @@ model Category {
 }
 
 model Book {
-  id              String        @id @default(uuid())
-  title           String
-  author          String
-  price           Float
-  genre           String
-  publicationDate DateTime
-  categoryId      String
-  category        Category      @relation(fields: [categoryId], references: [id])
-  orderedBooks    OrderedBook[]
+  id               String            @id @default(uuid())
+  title            String
+  author           String
+  price            Float
+  genre            String
+  publicationDate  DateTime
+  categoryId       String
+  category         Category          @relation(fields: [categoryId], references: [id])
+  orderedBooks     OrderedBook[]
+  reviewAndRatings ReviewAndRating[]
 
   @@map("books")
 }
@@ -71,6 +73,19 @@ model OrderedBook {
   Book   Book   @relation(fields: [bookId], references: [id])
 
   @@map("ordered_books")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  @@unique([bookId, userId])
+  @@map("review_and_ratings")
 }
 
 enum Status {

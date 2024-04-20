@@ -44,6 +44,12 @@ book catalog backend:
         1. Order model: orderedBooks as a prisma's Json typed field.
           1. is an array of objects: each object contains bookId, quantity.
           2. ex: [ { "bookId": "uuid1", "quantity": 2 }] 
+    7. ReviewAndRating
+      1. id: A UUID generated using the @default(uuid()) attribute.
+      2. review: A string representing the user's review.
+      3. rating: An integer representing the user's rating. (1 - 5)
+      4. userId: A UUID representing the user who submitted the review.
+      5. bookId: A UUID representing the book being reviewed.
   4. api endpoints and sample data:
     1. users listing: CRUD operations
       1. sign up:
@@ -456,6 +462,7 @@ book catalog backend:
         7. hints: access the specific order
           1. admin: no further checks are required.
           2. customer: verify order's userId matches the userId of the customer who placed the order. 
+    6. ReviewAndRating CRUD operations
 
 ### Live Link: https://backend-book-catalog.vercel.app
 
@@ -493,3 +500,10 @@ book catalog backend:
 - api/v1/orders/create-order (POST)
 - api/v1/orders (GET) 
 - api/v1/orders/:orderId (GET)
+
+### ReviewAndRating
+- api/v1/reviews (POST)
+- api/v1/reviews (GET)
+- api/v1/reviews/:id (GET)
+- api/v1/reviews/:id (PATCH)
+- api/v1/reviews/:id (DELETE)
