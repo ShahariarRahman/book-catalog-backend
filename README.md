@@ -1,10 +1,10 @@
 # Book Catalog Backend Application
 
-### Description:
+#### Description:
 
 Backend for a book listing application for CRUD operations, pagination and filtering.
 
-### Technology Stack:
+#### Technology Stack:
 
 |                             |            |
 | --------------------------- | ---------- |
@@ -13,143 +13,133 @@ Backend for a book listing application for CRUD operations, pagination and filte
 | Object relation model (ORM) | prisma     |
 | Database                    | postgresql |
 
-### Live Link: https://backend-book-catalog.vercel.app
+#### Live Link : [Book Catalog Backend](https://backend-book-catalog.vercel.app)
 
-## Application Routes:
+## Routes:
 
-### User
+#### User:
 
-- api/v1/auth/signup (POST)
-- api/v1/auth/signin (POST)
-- api/v1/users (GET)
-- api/v1/users/6177a5b87d32123f08d2f5d4 (GET)
-- api/v1/users/6177a5b87d32123f08d2f5d4 (PATCH)
-- api/v1/users/6177a5b87d32123f08d2f5d4 (DELETE)
-- api/v1/profile (GET)
+| Method | Path                                                                                      |
+| ------ | ----------------------------------------------------------------------------------------- |
+| Post   | https://backend-book-catalog.vercel.app/api/v1/auth/signup                                |
+| Post   | https://backend-book-catalog.vercel.app/api/v1/auth/signin                                |
+| Get    | https://backend-book-catalog.vercel.app/api/v1/users                                      |
+| Get    | https://backend-book-catalog.vercel.app/api/v1/users/cc22abbd-8281-4f9a-b576-29de1c4ca43b |
+| Patch  | https://backend-book-catalog.vercel.app/api/v1/users/cc22abbd-8281-4f9a-b576-29de1c4ca43b |
+| Delete | https://backend-book-catalog.vercel.app/api/v1/users/cc22abbd-8281-4f9a-b576-29de1c4ca43b |
+| Get    | https://backend-book-catalog.vercel.app/api/v1/profile                                    |
 
-### Category
+#### Category:
 
-- api/v1/categories/create-category (POST)
-- api/v1/categories (GET)
-- api/v1/categories/6177a5b87d32123f08d2f5d4 (Single GET)
-- api/v1/categories/6177a5b87d32123f08d2f5d4 (PATCH)
-- api/v1/categories/6177a5b87d32123f08d2f5d4 (DELETE)
+| Method | Path                                                                                           |
+| ------ | ---------------------------------------------------------------------------------------------- |
+| POST   | https://backend-book-catalog.vercel.app/api/v1/categories/create-category                      |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/categories                                      |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/categories/cf755fd2-b366-4ecf-9090-2c0af3ea8d66 |
+| PATCH  | https://backend-book-catalog.vercel.app/api/v1/categories/cf755fd2-b366-4ecf-9090-2c0af3ea8d66 |
+| DELETE | https://backend-book-catalog.vercel.app/api/v1/categories/cf755fd2-b366-4ecf-9090-2c0af3ea8d66 |
 
-### Books
+#### Books:
 
-- api/v1/books/create-book (POST)
-- api/v1/books (GET)
-- api/v1/books/:categoryId/category (GET)
-- api/v1/books/:id (GET)
-- api/v1/books/:id (PATCH)
-- api/v1/books/:id (DELETE)
+| Method | Path                                                                                               |
+| ------ | -------------------------------------------------------------------------------------------------- |
+| POST   | https://backend-book-catalog.vercel.app/api/v1/books/create-book                                   |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/books                                               |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/books/2deb3fea-e53f-4485-a44b-e834b5c3809f/category |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/books/5e12363c-e626-4a87-a7fb-93f51d4a6bd4          |
+| PATCH  | https://backend-book-catalog.vercel.app/api/v1/books/5e12363c-e626-4a87-a7fb-93f51d4a6bd4          |
+| DELETE | https://backend-book-catalog.vercel.app/api/v1/books/5e12363c-e626-4a87-a7fb-93f51d4a6bd4          |
 
-### Orders
+#### Orders:
 
-- api/v1/orders/create-order (POST)
-- api/v1/orders (GET)
-- api/v1/orders/:orderId (GET)
+| Method | Path                                                                                       |
+| ------ | ------------------------------------------------------------------------------------------ |
+| POST   | https://backend-book-catalog.vercel.app/api/v1/orders/create-order                         |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/orders                                      |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/orders/97726085-b201-4951-961c-073089a537a1 |
 
-### ReviewAndRating
+#### ReviewAndRating:
 
-- api/v1/reviews (POST)
-- api/v1/reviews (GET)
-- api/v1/reviews/:id (GET)
-- api/v1/reviews/:id (PATCH)
-- api/v1/reviews/:id (DELETE)
+| Method | Path                                                                                        |
+| ------ | ------------------------------------------------------------------------------------------- |
+| POST   | https://backend-book-catalog.vercel.app/api/v1/reviews                                      |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/reviews                                      |
+| GET    | https://backend-book-catalog.vercel.app/api/v1/reviews/a1f49a09-39d2-4a79-9b4a-e22debc55b5d |
+| PATCH  | https://backend-book-catalog.vercel.app/api/v1/reviews/a1f49a09-39d2-4a79-9b4a-e22debc55b5d |
+| DELETE | https://backend-book-catalog.vercel.app/api/v1/reviews/a1f49a09-39d2-4a79-9b4a-e22debc55b5d |
 
-## Application Model:
+## Models:
 
-### User Model:
+#### User:
 
-Create a `User` model with the following fields:
+| Field      | Type                                                  |
+| ---------- | ----------------------------------------------------- |
+| id         | A UUID generated using the @default(uuid()) attribute |
+| name       | A string representing the user's name                 |
+| email      | A unique string representing the user's email         |
+| password   | A string representing the user's password             |
+| role       | A string with values 'admin' or 'customer'            |
+| contactNo  | A string for the user's contact number                |
+| address    | A string for the user's address                       |
+| profileImg | A string for the user's profile image                 |
 
-- id: A UUID generated using the @default(uuid()) attribute.
-- name: A string representing the user's name.
-- email: A unique string representing the user's email.
-- password: A string representing the user's password.
-- role: A string with values 'admin' or 'customer'.
-- contactNo: A string for the user's contact number.
-- address: A string for the user's address.
-- profileImg: A string for the user's profile image.
+#### Category:
 
-### Category Model:
+| Field | Type                                                  |
+| ----- | ----------------------------------------------------- |
+| id    | A UUID generated using the @default(uuid()) attribute |
+| title | A string representing the category title              |
 
-Create a `Category` model with the following fields:
+#### Book:
 
-- id: A UUID generated using the @default(uuid()) attribute.
-- title: A string representing the category title.
+| Field           | Type                                                       |
+| --------------- | ---------------------------------------------------------- |
+| id              | A UUID generated using the @default(uuid()) attribute      |
+| title           | A string representing the book's title                     |
+| author          | A string representing the book's author                    |
+| price           | A floating-point number representing the book's price      |
+| genre           | A string representing the book's genre                     |
+| publicationDate | A string field representing the book's publication date    |
+| categoryId      | A UUID representing the category to which the book belongs |
 
-### Book Model:
+#### Order:
 
-Create a `Book` model with the following fields:
+| Field        | Type                                                                               |
+| ------------ | ---------------------------------------------------------------------------------- |
+| id           | A UUID generated using the @default(uuid()) attribute                              |
+| userId       | A UUID representing the user who placed the order                                  |
+| orderedBooks | A JSON field containing an array of objects, each with book ID and quantity        |
+| status       | A string with values 'pending', 'shipped', or 'delivered', defaulting to 'pending' |
+| createdAt    | A DateTime field representing the order creation timestamp                         |
 
-- id: A UUID generated using the @default(uuid()) attribute.
-- title: A string representing the book's title.
-- author: A string representing the book's author.
-- price: A floating-point number representing the book's price.
-- genre: A string representing the book's genre.
-- publicationDate: A string field representing the book's publication date.
-- categoryId: A UUID representing the category to which the book belongs.
+#### OrderedBook model or Json approaches in Order:
 
-### Order Model
+##### Approach 1: OrderedBook
 
-Create an `Order` model with the following fields:
+| Field    | Type                                                  |
+| -------- | ----------------------------------------------------- |
+| id       | A UUID generated using the @default(uuid()) attribute |
+| orderId  | A UUID representing the order                         |
+| bookId   | A UUID representing the ordered book                  |
+| quantity | An integer representing the quantity of the book      |
 
-- id: A UUID generated using the @default(uuid()) attribute.
-- userId: A UUID representing the user who placed the order.
-- orderedBooks: A JSON field containing an array of objects, each with book ID and quantity.
-- status: A string with values 'pending', 'shipped', or 'delivered', defaulting to 'pending'.
-- createdAt: A DateTime field representing the order creation timestamp.
+##### Approach 2: Json
 
-#### Storing Ordered Books: Two approaches
+- Order model: orderedBooks as a prisma's Json typed field
+- - is an array of objects: each object contains bookId, quantity.
+- - ex: [ { "bookId": "uuid1", "quantity": 2 }]
 
-When it comes to storing ordered books in application, we have a range of choices. Here, we have two prevalent strategies: utilizing a JSON field to hold the data, or alternatively, crafting a distinct model for ordered books.
+#### ReviewAndRating:
 
-##### Approach 1: Using JSON Type
+| Field  | Type                                                  |
+| ------ | ----------------------------------------------------- |
+| id     | A UUID generated using the @default(uuid()) attribute |
+| review | A string representing the user's review               |
+| rating | An integer representing the user's rating. (1 - 5)    |
+| userId | A UUID representing the user who submitted the review |
+| bookId | A UUID representing the book being reviewed           |
 
-1. Define the JSON Field:
-
-- In the `Order` model, define the `orderedBooks` field as a JSON data type.
-- Use Prisma's Json type to represent JSON data.
-
-2. Storing Array of Objects:
-
-- In the `orderedBooks` field, store an array of objects, each containing `bookId` and `quantity`.
-- JSON arrays are enclosed in square brackets [], and objects are enclosed in curly braces {}.
-
-3. Example JSON Structure:
-
-```json
-[
-  { "bookId": "uuid1", "quantity": 2 },
-  { "bookId": "uuid2", "quantity": 1 }
-]
-```
-
-#### Approach 2: Using Separate Model
-
-1. Define OrderedBook Model:
-
-- Create an `OrderedBook` model with fields: `id`, `orderId`, `bookId`, and `quantity`.
-- Use the @default(uuid()) attribute to generate UUIDs for id.
-
-2. Create Relationship:
-
-- In the `Order` model, establish a one-to-many relationship to `OrderedBook`.
-- This enables each order to have multiple associated ordered book entries.
-
-### Review And Rating:
-
-Create a `ReviewAndRating` model with the following fields:
-
-- id: A UUID generated using the @default(uuid()) attribute.
-- review: A string representing the user's review.
-- rating: An integer representing the user's rating. (1 - 5)
-- userId: A UUID representing the user who submitted the review.
-- bookId: A UUID representing the book being reviewed.
-
-## API Endpoints and Sample Data:
+## Examples: API Endpoints and Sample Data:
 
 ### Implement CRUD Operations for Users Listing
 
@@ -161,7 +151,7 @@ Request body:
 
 ```json
 {
-  "name": "Jhon Doe",
+  "name": "John Doe",
   "email": "john@example.com",
   "password": "john123",
   "role": "customer",
@@ -863,3 +853,8 @@ Sample Response Data:
 ```
 
 ## Implement CRUD Operations for Book Reviews
+
+- Create operation.
+- Read operation.
+- Update operation.
+- Delete operation.

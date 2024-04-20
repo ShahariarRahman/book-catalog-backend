@@ -15,6 +15,18 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Welcome to book catalog backend application",
+    data: {
+      version: "1.0.0",
+      path: "api/v1",
+    },
+  });
+  next();
+});
+
 app.use("/api/v1", routes);
 
 //global error handler
